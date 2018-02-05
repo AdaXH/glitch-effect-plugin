@@ -1,4 +1,4 @@
-
+// Author:AdaXH
 // 2018-1-31
 
 (function($){
@@ -10,6 +10,7 @@
 					effect1TimeMax:900,
 					effect2TimeMin : 10,
 					effect2TimeMax : 115,
+					time:100
 				};
 				option = $.extend(option,config);
 
@@ -23,9 +24,33 @@
 
                     var el2 = $(el).clone();
                     el2.insertAfter(el).addClass('front-3').
-                    css({'z-index' : option.zIndexDefault + 3});      
+                    css({'z-index' : option.zIndexDefault + 1});   
+                    
+                    var el3 = el.clone();
+                    el3.insertAfter(el).css({'z-index': option.zIndexDefault+2});
                 }
 
+				function mix(el,option) {
+                
+                     var clipPos1 = randomInt(10, 1900);
+                     var clipPos2 = 9999;
+                     var clipPos3 = randomInt(10, 1300);
+                     var clipPos4 = 0;
+                     var leftValue = randomInt(0, 40);
+                     var rightValue = randomInt(0, 40);
+                     var scaleValue = (Math.random() * (1.1 - 0.9) + 0.9).toFixed(2);
+                     var randomTime = randomInt(option.effect2TimeMin, option.effect2TimeMax); 
+                     $(el).next().next().css({
+                    	     'clip' : 'rect('+clipPos1+'px, '+clipPos2+'px, '+clipPos3+'px,' + clipPos4 +'px)',
+                    	     'left' : leftValue,
+                           	'right' : rightValue,
+                    	      '-webkit-transform' : 'scale(' + scaleValue + ')',
+                               '-ms-transform' : 'scale(' + scaleValue + ')',
+                              'transform' : 'scale(' + scaleValue + ')',
+                              'mix-blend-mode':'hue'
+                            });
+                }
+				
                 function glitch1(el,config) {                   	
              		 var clip1 = randomInt(10, 1900);
              		 var clip2 = 9999;
@@ -58,7 +83,7 @@
                              'right' : right,
                              '-webkit-transform' : 'scale(' + scale + ')',
                              '-ms-transform' : 'scale(' + scale + ')',
-                          'transform' : 'scale(' + scale + ')'
+                          'transform' : 'scale(' + scale + ')',
                      });
                    }
 
@@ -66,7 +91,8 @@
                   setInterval(()=>{
                   	glitch1(this,option);
                   	glitch2(this,option);
-                  },50);
+                  	mix(this,option);
+                  },option.time);
 			}
 		})
 })(jQuery);
