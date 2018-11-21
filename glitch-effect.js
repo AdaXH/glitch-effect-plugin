@@ -1,98 +1,99 @@
-// Author:AdaXH
-// 2018-1-31
+// Author:Adaxh
 
-(function($){
-		$.fn.extend({
-			glitch:function(config){
-				var option = {      //default configure
-					zIndexDefault:3,
-					effect1TimeMin:600,
-					effect1TimeMax:900,
-					effect2TimeMin : 10,
-					effect2TimeMax : 115,
-					time:100
-				};
-				option = $.extend(option,config);
+class Glitch {
+    constructor(el) {
+        this.option = {
+            el: el,
+            zIndexDefault: 3,
+            effect1TimeMin: 600,
+            effect1TimeMax: 900,
+            effect2TimeMin: 10,
+            effect2TimeMax: 115,
+            time: 100
+        }
+    }
+    randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+    init() {
+        const el1 = this.option.el.cloneNode(true)
+        el1.style.zIndex = '' + this.option.zIndexDefault
+        this.option.el.parentNode.appendChild(el1)
 
-				function randomInt(min, max) {
-                    return Math.floor(Math.random() * (max - min + 1)) + min;
-                 }
+        const el2 = this.option.el.cloneNode(true)
+        this.option.el.parentNode.appendChild(el2)
+        el2.className += ' front-3'
+        el2.style['z-index'] = '' + (this.option.zIndexDefault + 1);
 
-                function init(el,option){
-                	var el1 = el.clone();
-                    el1.insertBefore(el).css({'z-index': option.zIndexDefault});
+        const el3 = this.option.el.cloneNode(true)
+        this.option.el.parentNode.appendChild(el3)
+        el3.style['z-index'] = '' + (this.option.zIndexDefault + 2);
+    }
+    setStyle(el, styles) {
+        for (let key in styles)
+            el.style[key] = styles[key]
+        return el
+    }
+    mix() {
+        const clipPos1 = this.randomInt(10, 1900);
+        const clipPos2 = 9999;
+        const clipPos3 = this.randomInt(10, 1300);
+        const clipPos4 = 0;
+        const leftValue = this.randomInt(0, 40);
+        const rightValue = this.randomInt(0, 40);
+        const scaleValue = (Math.random() * (1.1 - 0.9) + 0.9).toFixed(2);
+        const randomTime = this.randomInt(this.option.effect2TimeMin, this.option.effect2TimeMax);
 
-                    var el2 = $(el).clone();
-                    el2.insertAfter(el).addClass('front-3').
-                    css({'z-index' : option.zIndexDefault + 1});   
-                    
-                    var el3 = el.clone();
-                    el3.insertAfter(el).css({'z-index': option.zIndexDefault+2});
-                }
+        this.setStyle(this.option.el.parentNode.children[1], {
+            'clip': 'rect(' + clipPos1 + 'px, ' + clipPos2 + 'px, ' + clipPos3 + 'px,' + clipPos4 + 'px)',
+            'left': leftValue,
+            'right': rightValue,
+            '-webkit-transform': 'scale(' + scaleValue + ')',
+            '-ms-transform': 'scale(' + scaleValue + ')',
+            'transform': 'scale(' + scaleValue + ')',
+            'mix-blend-mode': 'hue'
+        })
+    }
+    glitch1() {
+        const clip1 = this.randomInt(10, 1900);
+        const clip2 = 9999;
+        const clip3 = this.randomInt(10, 1300);
+        const clip4 = 0;
+        const left = this.randomInt(0, 16);
+        const right = this.randomInt(0, 16);
+        const randomTime = this.randomInt(this.option.effect1TimeMin, this.option.effect1TimeMax);
 
-				function mix(el,option) {
-                
-                     var clipPos1 = randomInt(10, 1900);
-                     var clipPos2 = 9999;
-                     var clipPos3 = randomInt(10, 1300);
-                     var clipPos4 = 0;
-                     var leftValue = randomInt(0, 40);
-                     var rightValue = randomInt(0, 40);
-                     var scaleValue = (Math.random() * (1.1 - 0.9) + 0.9).toFixed(2);
-                     var randomTime = randomInt(option.effect2TimeMin, option.effect2TimeMax); 
-                     $(el).next().next().css({
-                    	     'clip' : 'rect('+clipPos1+'px, '+clipPos2+'px, '+clipPos3+'px,' + clipPos4 +'px)',
-                    	     'left' : leftValue,
-                           	'right' : rightValue,
-                    	      '-webkit-transform' : 'scale(' + scaleValue + ')',
-                               '-ms-transform' : 'scale(' + scaleValue + ')',
-                              'transform' : 'scale(' + scaleValue + ')',
-                              'mix-blend-mode':'hue'
-                            });
-                }
-				
-                function glitch1(el,config) {                   	
-             		 var clip1 = randomInt(10, 1900);
-             		 var clip2 = 9999;
-             		 var clip3 = randomInt(10, 1300);
-             		 var clip4 = 0;
-             		 var left = randomInt(0, 16);
-             		 var right = randomInt(0, 16);
-             		 var randomTime = randomInt(config.effect1TimeMin, config.effect1TimeMax);
-             		
-             		 $(el).css({   //attention to : the principle of glitch effect
-             		         'clip' : 'rect('+clip1+'px, '+clip2+'px, '+clip3+'px,' + clip4 +'px)' ,
-             		         'right' : right,
-             		         'left' : left	
-             		 });
-         		}	
+        this.setStyle(this.option.el.parentNode.children[2], {
+            'clip': 'rect(' + clip1 + 'px, ' + clip2 + 'px, ' + clip3 + 'px,' + clip4 + 'px)',
+            'right': right,
+            'left': left
+        })
+    }
+    glitch2() {
+        const clip1 = this.randomInt(10, 1900);
+        const clip2 = 9999;
+        const clip3 = this.randomInt(10, 1300);
+        const clip4 = 0;
+        const left = this.randomInt(0, 40);
+        const right = this.randomInt(0, 40);
+        const randomTime = this.randomInt(this.option.effect2TimeMin, this.option.effect2TimeMax);
+        const scale = (Math.random() * (1.1 - 0.9) + 0.9).toFixed(2);
 
-         		function glitch2(el,config) {
-                     var clip1 = randomInt(10, 1900);
-                     var clip2 = 9999;
-                     var clip3 = randomInt(10, 1300);
-                     var clip4 = 0;
-                     var left = randomInt(0, 40);
-                     var right = randomInt(0, 40);
-                     var randomTime = randomInt(config.effect2TimeMin, config.effect2TimeMax);
-                     var scale = (Math.random() * (1.1 - 0.9) + 0.9).toFixed(2);
-
-                     $(el).next().css({
-                          'clip' : 'rect('+clip1+'px, '+clip2+'px, '+clip3+'px,' + clip4 +'px)',
-                          'left' : left,
-                             'right' : right,
-                             '-webkit-transform' : 'scale(' + scale + ')',
-                             '-ms-transform' : 'scale(' + scale + ')',
-                          'transform' : 'scale(' + scale + ')',
-                     });
-                   }
-
-                  init(this,option);
-                  setInterval(()=>{
-                  	glitch1(this,option);
-                  	glitch2(this,option);
-                  	mix(this,option);
-                  },option.time);
-			}
-		})
-})(jQuery);
+        this.setStyle(this.option.el.parentNode.children[3], {
+            'clip': 'rect(' + clip1 + 'px, ' + clip2 + 'px, ' + clip3 + 'px,' + clip4 + 'px)',
+            'left': left,
+            'right': right,
+            '-webkit-transform': 'scale(' + scale + ')',
+            '-ms-transform': 'scale(' + scale + ')',
+            'transform': 'scale(' + scale + ')',
+        })
+    }
+    start() {
+        this.init()
+        setInterval(() => {
+            this.glitch1();
+            this.glitch2();
+            this.mix();
+        }, this.option.time);
+    }
+}
